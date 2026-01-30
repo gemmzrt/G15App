@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-gemma-darker text-slate-100 font-body;
+    /* Festive gradient background with subtle animation */
+    background: linear-gradient(135deg, #020617 0%, #1e1b4b 25%, #4c1d95 50%, #581c87 75%, #0f172a 100%);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+    min-height: 100vh;
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-slate-800/30 backdrop-blur-md border border-slate-700/50;
+  }
+
+  .festive-gradient {
+    @apply bg-gradient-to-r from-gemma-pink via-gemma-purple to-gemma-violet;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-gemma-pink via-gemma-purple to-gemma-violet bg-clip-text text-transparent;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gemma-purple rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gemma-pink;
+}

@@ -2,6 +2,42 @@
 
 **Iteración 1 (MVP)** - Proyecto funcional, deployable y con arquitectura production-ready.
 
+---
+
+## 🚀 Quick Start (5 minutos)
+
+```bash
+# 1. Clonar e instalar
+git clone <tu-repo>
+cd gemma15
+npm install
+
+# 2. Configurar environment
+cp .env.example .env
+# Editar .env con tus credenciales de Supabase
+
+# 3. Ejecutar
+npm run dev
+```
+
+📖 **Guía completa**: [`docs/QUICK_START.md`](docs/QUICK_START.md)
+
+---
+
+## 📚 Documentación
+
+| Documento | Descripción |
+|-----------|-------------|
+| **[QUICK_START.md](docs/QUICK_START.md)** | Setup rápido (5 min) |
+| **[SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)** | Configurar base de datos paso a paso |
+| **[NETLIFY_DEPLOY.md](docs/NETLIFY_DEPLOY.md)** | Deploy a Netlify |
+| **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** | Deploy a Vercel/GitHub Pages/Docker |
+| **[DEV_COMMANDS.md](docs/DEV_COMMANDS.md)** | Comandos útiles para desarrollo |
+| **[PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** | Estado del proyecto y roadmap |
+| **[MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md)** | Referencia completa de SQL |
+
+---
+
 ## 🚀 Stack Tecnológico
 
 - **Frontend**: React 18 + TypeScript (strict mode)
@@ -15,10 +51,22 @@
 - **PWA**: Vite PWA Plugin + Workbox
 - **Timezone**: Luxon
 
+---
+
 ## 📁 Estructura del Proyecto
 
 ```
 gemma15/
+├── docs/                       # 📚 Documentación
+│   ├── QUICK_START.md         # Setup rápido
+│   ├── SUPABASE_SETUP.md      # Config de base de datos
+│   ├── NETLIFY_DEPLOY.md      # Deploy a Netlify
+│   ├── DEPLOYMENT.md          # Deploy a otras plataformas
+│   ├── DEV_COMMANDS.md        # Comandos útiles
+│   ├── PROJECT_STATUS.md      # Estado y roadmap
+│   └── MIGRATION_GUIDE.md     # Referencia SQL
+├── database/                   # 🗄️ Database
+│   └── migrations.sql         # Schema completo de Supabase
 ├── src/
 │   ├── app/                    # App core
 │   │   ├── App.tsx            # Main app component
@@ -35,174 +83,42 @@ gemma15/
 │   │   └── mappers.ts         # DB → Domain mappers
 │   ├── features/               # Feature modules
 │   │   ├── auth/              # Authentication
-│   │   │   ├── api.ts
-│   │   │   └── pages/InviteGate.tsx
 │   │   ├── profile/           # User profile
-│   │   │   ├── api.ts
-│   │   │   └── pages/ProfileSetup.tsx
 │   │   ├── home/              # Home/Dashboard
-│   │   │   ├── pages/Home.tsx
-│   │   │   └── components/
-│   │   │       ├── CountdownCard.tsx
-│   │   │       └── TableCard.tsx
 │   │   ├── rsvp/              # RSVP functionality
-│   │   │   └── components/RSVPCard.tsx
 │   │   └── admin/             # Admin panel
-│   │       └── pages/AdminDashboard.tsx
 │   ├── components/ui/          # Reusable UI components
-│   │   ├── Button.tsx
-│   │   ├── Card.tsx
-│   │   ├── Input.tsx
-│   │   ├── Modal.tsx
-│   │   ├── Skeleton.tsx
-│   │   └── Toast.tsx
-│   ├── styles/
-│   │   └── index.css          # Global styles + Tailwind
-│   └── main.tsx               # App entry point
-├── public/                     # Static assets (PWA icons)
+│   └── styles/                 # Global styles
+├── public/                     # Static assets
 ├── tests/                      # Tests (Vitest + Playwright)
 └── [config files]              # TS, Vite, Tailwind, ESLint, etc.
 ```
 
-## 🛠️ Setup Instructions
+---
 
-### 1. Instalar Dependencias
+## 🎯 Features
 
-```bash
-npm install
-```
+### ✅ Implementado (Iteración 1)
 
-### 2. Configurar Variables de Entorno
+- **Autenticación**: Código → Email → Magic Link
+- **Perfil**: Setup obligatorio con avatar
+- **Home**: Bento Grid con countdown en tiempo real
+- **RSVP**: Confirmar/Rechazar asistencia
+- **Mesas**: Asignación con Realtime sync
+- **Admin**: Dashboard básico
+- **PWA**: Instalable en móvil/desktop
+- **Diseño**: Tema festivo rosa/púrpura
 
-Copia el archivo de ejemplo y completa tus credenciales de Supabase:
+📊 **Estado completo**: [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md)
 
-```bash
-cp .env.example .env
-```
+### 🚧 Próximas Iteraciones
 
-Edita `.env` y agrega tus credenciales:
+- Admin panel completo (gestión de invites, guests, mesas)
+- Features sociales (chat, galería, sugerencias)
+- Notificaciones push
+- Y más...
 
-```env
-VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
-VITE_SUPABASE_ANON_KEY=tu-anon-key-aqui
-```
-
-### 3. Configurar Supabase
-
-**IMPORTANTE**: Este proyecto asume que ya tienes una base de datos Supabase configurada con el schema completo.
-
-Debes ejecutar el archivo `migrations.sql` que debe incluir:
-
-#### Tablas requeridas:
-- `invites` (id, code, email, segment, used, claimed_by)
-- `profiles` (id, user_id, first_name, last_name, is_celiac, avatar_url, segment, is_admin)
-- `rsvps` (id, user_id, status, notes)
-- `table_assignments` (id, user_id, table_number)
-
-#### Funciones RPC requeridas:
-- `is_admin(user_uuid)`: Retorna si un usuario es admin
-- `claim_invite_code(code)`: Valida y reclama un código de invitación
-
-#### Storage Buckets:
-- `avatars`: Para fotos de perfil
-- `user_photos`: Para fotos subidas por usuarios
-
-#### Row Level Security (RLS):
-Configura policies apropiadas para cada tabla según el rol (ADMIN vs INVITED).
-
-### 4. Ejecutar en Desarrollo
-
-```bash
-npm run dev
-```
-
-La app estará disponible en `http://localhost:3000`
-
-## 🎨 Diseño y Estética
-
-La aplicación usa un diseño festivo con:
-- **Colores**: Rosa (#ec4899), Púrpura (#c026d3), Violeta (#a855f7)
-- **Fondo**: Gradiente animado oscuro (slate/purple)
-- **Tipografía**: 
-  - Display: "Playfair Display" (serif elegante)
-  - Body: "Outfit" (sans-serif moderna)
-- **Efectos**: Glass morphism, animaciones suaves, micro-interacciones
-
-## ⏰ Cuenta Regresiva
-
-Configuración del evento (hardcoded en Iteración 1):
-
-- **Fecha**: 14 de Marzo 2026
-- **Timezone**: America/Argentina/Buenos_Aires
-- **Ventana global**: 14:00 del 14/03 hasta 01:00 del 15/03
-- **Segmentos**:
-  - YOUNG: Ingreso a las 14:00
-  - ADULT: Ingreso a las 19:00
-
-La cuenta regresiva se actualiza cada 30 segundos y muestra:
-- **Antes del evento**: Días, horas, minutos restantes
-- **Durante el evento**: "EN CURSO" + tiempo hasta el fin
-- **Después del evento**: "Finalizado"
-
-## 🔐 Flujo de Autenticación
-
-1. Usuario ingresa **código de invitación** (ej: "ABC123")
-2. Usuario ingresa su **email**
-3. Sistema envía **Magic Link** al email
-4. Usuario hace click en el link → sesión autenticada
-5. Sistema ejecuta RPC `claim_invite_code()` para validar y reclamar
-6. Si el perfil está incompleto → redirige a `/profile/setup`
-7. Si el perfil está completo → redirige a Home `/`
-
-## 📱 PWA (Progressive Web App)
-
-El Service Worker está configurado con:
-
-✅ **Network-only** para llamadas a Supabase (no cachear API)  
-✅ **Cache-first** para fuentes de Google y assets estáticos  
-✅ Manifest con iconos para instalación en móvil  
-
-Para **deshabilitar** el PWA temporalmente:
-
-```env
-VITE_DISABLE_PWA=true
-```
-
-## 🧪 Testing y QA
-
-### Lint
-```bash
-npm run lint
-```
-
-### Typecheck
-```bash
-npm run typecheck
-```
-
-### Unit Tests (Vitest)
-```bash
-npm run test
-```
-
-### E2E Tests (Playwright)
-```bash
-npm run test:e2e
-```
-
-**NOTA**: Los tests básicos están configurados pero necesitan ser implementados completamente. Ver `tests/` para estructura inicial.
-
-## 🏗️ Build para Producción
-
-```bash
-npm run build
-```
-
-Los archivos estarán en `dist/`. Puedes previsualizar con:
-
-```bash
-npm run preview
-```
+---
 
 ## 🔧 Scripts Disponibles
 
@@ -216,98 +132,103 @@ npm run preview
 | `npm run test` | Ejecutar tests unitarios |
 | `npm run test:e2e` | Ejecutar tests E2E |
 
-## 🎯 Features de Iteración 1 (MVP)
+📖 **Más comandos**: [`docs/DEV_COMMANDS.md`](docs/DEV_COMMANDS.md)
 
-### ✅ Implementado
+---
 
-- [x] Auth con Código + Email + Magic Link
-- [x] Perfil obligatorio (first_name, last_name, is_celiac, avatar)
-- [x] Home con Bento Grid
-- [x] Tarjeta de bienvenida
-- [x] Cuenta regresiva en tiempo real (luxon + timezone)
-- [x] RSVP (Confirmar/Rechazar asistencia)
-- [x] Tu Mesa (con Realtime subscriptions)
-- [x] Tarjeta de ubicación (placeholder)
-- [x] Admin Dashboard (estructura base)
-- [x] PWA instalable con Service Worker
-- [x] Diseño festivo con animaciones
-- [x] Multi-dispositivo (sync via Supabase)
-- [x] Manejo de errores con AppError + Toasts
-- [x] Logging estructurado
-- [x] Null-safety defensivo
-- [x] Mappers explícitos DB → Domain
+## 🎨 Diseño
 
-### 🚧 Pendiente para próximas iteraciones
+- **Colores**: Rosa (#ec4899), Púrpura (#c026d3), Violeta (#a855f7)
+- **Tipografía**: Playfair Display + Outfit
+- **Efectos**: Glass morphism, gradientes animados
+- **Responsive**: Mobile-first
 
-- [ ] Admin: InvitesManager (CRUD de invites)
-- [ ] Admin: GuestsList (lista filtrable)
-- [ ] Admin: TableAssignments (asignar mesas)
-- [ ] Tests E2E completos
-- [ ] Features sociales (chat, fotos, sugerencias de canciones)
+📝 Para personalizar colores y fuentes, edita `tailwind.config.js`
 
-## 📄 Archivos de Configuración
+---
 
-- **TypeScript**: `tsconfig.json` (strict mode)
-- **Vite**: `vite.config.ts` (PWA + alias)
-- **Tailwind**: `tailwind.config.js` (tema festivo)
-- **ESLint**: `.eslintrc.cjs` (reglas estrictas)
-- **PostCSS**: `postcss.config.js`
+## ⏰ Cuenta Regresiva
 
-## 🐛 Debug y Troubleshooting
+- **Fecha**: 14 de Marzo 2026
+- **Timezone**: America/Argentina/Buenos_Aires
+- **Actualización**: Cada 30 segundos
+- **Estados**: Antes / En curso / Finalizado
 
-### Error: "Missing environment variables"
+---
 
-Asegúrate de tener `.env` con las variables correctas. Ver `.env.example`.
+## 🔐 Autenticación
 
-### Error: "Invite code invalid"
+1. Ingresa código de invitación
+2. Ingresa email → recibe magic link
+3. Click en el link → sesión creada
+4. Completa perfil si es necesario
+5. ¡Listo! Acceso a la app
 
-Verifica que:
-1. El código existe en la tabla `invites`
-2. `used = false`
-3. El RPC `claim_invite_code()` está funcionando
+---
 
-### PWA no se instala
+## 📱 PWA
 
-Verifica que:
-1. Estás usando HTTPS (o localhost)
-2. Los iconos existen en `/public`
-3. El manifest es válido
+- ✅ Instalable en móvil y desktop
+- ✅ Network-only para Supabase (no cachea API)
+- ✅ Cache para assets estáticos
 
-### Countdown no actualiza
+Ver `public/PWA_ICONS_SETUP.md` para generar íconos personalizados.
 
-El countdown se actualiza cada 30 segundos. Si no ves cambios, verifica que la fecha del evento esté configurada correctamente en `lib/time.ts`.
+---
 
-## 🎨 Personalización
+## 🚢 Deployment
 
-### Cambiar colores del tema
+### Netlify (Recomendado)
 
-Edita `tailwind.config.js`:
+📖 **Guía completa**: [`docs/NETLIFY_DEPLOY.md`](docs/NETLIFY_DEPLOY.md)
 
-```js
-colors: {
-  'gemma-pink': '#tu-color-aqui',
-  'gemma-purple': '#tu-color-aqui',
-  // ...
-}
+```bash
+# Push a Git
+git push origin main
+
+# Netlify auto-deploya desde Git
+# Configura env vars en Netlify dashboard
 ```
 
-### Cambiar tipografía
+### Otras Plataformas
 
-Edita `tailwind.config.js` y actualiza los imports en `index.html`:
+📖 **Ver**: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) para Vercel, GitHub Pages, Docker
 
-```js
-fontFamily: {
-  'display': ['"Tu Font Display"', 'serif'],
-  'body': ['"Tu Font Body"', 'sans-serif'],
-}
+---
+
+## 🧪 Testing
+
+```bash
+npm run lint        # ESLint
+npm run typecheck   # TypeScript
+npm test            # Unit tests (Vitest)
+npm run test:e2e    # E2E tests (Playwright)
 ```
+
+---
+
+## 🐛 Troubleshooting
+
+**Error: "Missing environment variables"**  
+→ Copia `.env.example` a `.env` y completa las credenciales
+
+**Error: "Invite code invalid"**  
+→ Verifica que el código exista en la tabla `invites` de Supabase
+
+**PWA no se instala**  
+→ Necesitas HTTPS (Netlify/Vercel lo proveen automáticamente)
+
+📖 **Más troubleshooting**: Ver documentos en `/docs`
+
+---
 
 ## 📞 Soporte
 
-Para issues o preguntas:
-1. Revisa la documentación
-2. Revisa los logs en consola (modo dev)
-3. Usa la ruta `/debug` para ver diagnósticos
+- 📖 Documentación completa en `/docs`
+- 🐛 Issues en GitHub
+- 💬 Contacto: [tu-email]
+
+---
 
 ## 📝 Licencia
 
